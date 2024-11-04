@@ -180,3 +180,4 @@ export default Create;
 Make sure that these new fields are managed using React's `useState` and that the input values are logged to the console upon form submission.
 
 ---
+"# lab6" 

@@ -1,4 +1,6 @@
+import axios from "axios";
 import { useState } from "react";
+
 
 const Create = () => {
 
@@ -9,7 +11,13 @@ const Create = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const movie = {title,year,poster};
+
+        axios.post('http://localhost:4000/api/movies',movie)
+        .then()
+        .catch();
         console.log(movie);
+
+
     }
 
     return (
