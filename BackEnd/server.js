@@ -1,6 +1,7 @@
 const express = require('express'); // Import the Express framework
 const app = express(); // Create an instance of an Express application
 const port = 4000; // Define the port on server
+
 const cors = require('cors');
 app.use(cors());
 const bodyParser = require('body-parser');
