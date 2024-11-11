@@ -1,90 +1,91 @@
-const express = require('express'); // Import the Express framework
-const app = express(); // Create an instance of an Express application
-const port = 4000; // Define the port on server
+// Import the Express framework
+const express = require('express');
 
+// Create an instance of an Express application
+const app = express();
+
+// Define port for the server
+const port = 4000;
+
+// Import the CORS middleware to enable Cross-Origin Resource Sharing
 const cors = require('cors');
-// Use the CORS middleware
+
+// Use the CORS middleware for handling CORS requests
 app.use(cors());
-// Import the body-parser middleware to parse incoming request bodies
+
+// Import the body-parser to parse incoming request bodies
 const bodyParser = require('body-parser');
-// Use body-parser to parse URL-encoded data
+
+// Configure body-parser to parse URL-encoded data
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Configure body-parser to parse JSON data
 app.use(bodyParser.json());
+
 // Middleware to set custom headers for CORS
 app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); // Allow specified HTTP methods
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept"); // Allow specified headers
 
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
-  next();
+  next(); 
 });
-// Route for the root URL that sends a message
+
+//sends a welcome message
 app.get('/', (req, res) => {
     res.send('Welcome to Data Representation & Querying');
 });
 
+// Import Mongoose for working with MongoDB
 const mongoose = require('mongoose');
+
+// Connect to MongoDB using the provided connection string
 mongoose.connect('mongodb+srv://admin:admin@cluster1.ywayv.mongodb.net/');
 
+// Define a schema for the movie data structure
 const movieSchema = new mongoose.Schema({
     title: String,
     year: String,
     poster: String
-  });
- 
-  const Movie = mongoose.model('MyMovies', movieSchema);
-// Route to get a list of movies in JSON format
-//app.get('/api/movies', (req, res) => {
-   // const movies = [ // Create an array of movie items
-        //{
-            // "Title": "Avengers: Infinity War",
-            // "Year": "2018",
-            // "imdbID": "tt4154756",
-            // "Type": "movie",
-            // "Poster": "https://example.com/poster1.jpg"
-       // },
-      //  {
-      //      "Title": "Captain America: Civil War",
-      //      "Year": "2016",
-      //      "imdbID": "tt3498820",
-       //     "Type": "movie",
-       //     "Poster": "https://example.com/poster2.jpg"
-      //  },
-      //  {
-      //      "Title": "World War Z",
-      //      "Year": "2013",
-      //      "imdbID": "tt0816711",
-     //       "Type": "movie",
-     //       "Poster": "https://example.com/poster3.jpg"
-    //    }
-   // ];
-  //  res.json({ whatever: movies }); // Send the movies array as JSON response
-//});
+});
 
-app.get('/api/movies', async (req,res)=> {
+// Create a model for movies using the schema
+const Movie = mongoose.model('MyMovies', movieSchema);
 
+app.get('/api/movies', async (req, res) => {
+    // Retrieve all movies from the database
     const movies = await Movie.find({});
-    res.status(200).json({movies})
-})
+    
+    // Send the movies array as a JSON response with status code 200
+    res.status(200).json({ movies });
+});
 
+// Define a GET endpoint to retrieve a movie by its unique ID
 app.get('/api/movie/:id', async (req, res) => {
     const movie = await Movie.findById(req.params.id);
+
+    // Send the movie data as a response
     res.send(movie);
-  });
+});
+
 // Define a POST endpoint for adding new movies
-app.post('/api/movies',async (req,res)=>{
-    console.log("Movie added: "+req.body.title);
+app.post('/api/movies', async (req, res) => {
+    console.log("Movie added: " + req.body.title); // Log the added movie's title to the console
 
-    const{title,year,poster} = req.body;
+    // Destructure title, year, and poster properties from the request body
+    const { title, year, poster } = req.body;
 
-    const newMovie = new Movie ({title,year,poster});
+    // Create a new movie document with the provided data
+    const newMovie = new Movie({ title, year, poster });
+
+    // Save the new movie document to the database
     await newMovie.save();
 
+    // Send a response with a success message and the newly created movie data
     res.status(201).json({ message: 'Movie created successfully', movie: newMovie });
-})
+});
 
-// Start up of the server and on the specified port
+// Start the server and listen on the specified port
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`); // Log a message indicating the server is running
 });
