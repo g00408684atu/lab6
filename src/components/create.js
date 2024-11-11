@@ -1,23 +1,32 @@
-import axios from "axios";
-import { useState } from "react";
-
+import axios from "axios"; // Import Axios for making HTTP requests
+import { useState } from "react"; // Import useState for managing component state
 
 const Create = () => {
+    // State variables to hold movie details
+    const [title, setTitle] = useState(''); // State for movie title
+    const [year, setYear] = useState('');   // State for release year
+    const [poster, setPoster] = useState(''); // State for poster URL
 
-    const [title, setTitle] = useState('');
-    const [year, setYear] = useState('');
-    const [poster, setPoster] = useState('');
-
+    // Function to handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
-        const movie = {title,year,poster};
+        
+        // Create a movie object with the current state values
+        const movie = { title, year, poster };
 
-        axios.post('http://localhost:4000/api/movies',movie)
-        .then()
-        .catch();
+        // Make a POST request to the server to add the new movie
+        axios.post('http://localhost:4000/api/movies', movie)
+            .then(response => {
+                // Handle successful response 
+                console.log('Movie added:', response.data);
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('There was an error adding the movie!', error);
+            });
+
+        // Log the movie object to the console (optional)
         console.log(movie);
-
-
     }
 
     return (
