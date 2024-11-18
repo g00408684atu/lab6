@@ -68,6 +68,18 @@ app.get('/api/movie/:id', async (req, res) => {
     res.send(movie);
 });
 
+// Define the route to update a movie by its ID
+app.put('/api/movie/:id', async (req, res) => {
+    
+    // Find the movie by its ID and update it with the new data from the request body
+    // The option { new: true } ensures the updated movie is returned, not the original
+    let movie = await Movie.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+    // Send the updated movie as the response
+    res.send(movie); 
+});
+
+
 // Define a POST endpoint for adding new movies
 app.post('/api/movies', async (req, res) => {
     console.log("Movie added: " + req.body.title); // Log the added movie's title to the console
