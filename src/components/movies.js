@@ -1,17 +1,18 @@
-// Import the MovieItem component, which displays individual movie details
-import MovieItem from "./movieitem";
+import MovieItem from "./movieitem"; // Import the MovieItem component from the current directory
 
-// Define the Movies component, which receives a list of movies through props
-const Movies = (props) => {
-  
-  // Map over the array of movies passed in through props.myMovies
-  return props.myMovies.map((movie) => {
-    
-    // For each movie, render a MovieItem component
-    // Pass the movie object as the 'mymovie' prop and use the movie's '_id' as the unique key
-    return <MovieItem mymovie={movie} key={movie._id} />;
-  });
+function Movies(props) {// Define the Movies component which takes props as an argument
+    return (
+        <>
+            {/* Loop through the 'myMovies' array passed as a prop and render a MovieItem component for each movie */}
+            {props.myMovies.map((movie) => (
+                <MovieItem
+                    mymovie={movie} // Pass the current movie to the MovieItem component as a prop
+                    key={movie._id} // Unique key for each MovieItem to ensure React can efficiently update
+                    Reload={props.ReloadData} // Pass the ReloadData function prop to handle data reloading
+                />
+            ))}
+        </>
+    );
 }
 
-// Export the Movies component so it can be used in other parts of the application
-export default Movies;
+export default Movies;// Export the Movies component

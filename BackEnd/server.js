@@ -97,6 +97,17 @@ app.post('/api/movies', async (req, res) => {
     res.status(201).json({ message: 'Movie created successfully', movie: newMovie });
 });
 
+// Define a DELETE route to handle movie deletion by ID
+app.delete('/api/movie/:id', async (req, res) => {
+    console.log('Deleting movie with ID:', req.params.id);// Log the movie ID from the request parameters for debugging
+    const movie = await Movie.findByIdAndDelete(req.params.id);// Attempt to find the movie by its ID and delete it from the database
+    if (!movie) {
+        return res.status(404).send({ message: "Movie not found" });// Check if a movie was found and deleted; otherwise, handle the case where no movie was found
+}
+res.status(200).send({ message: "Movie deleted successfully", movie });    // Send a success response with the deleted movie information
+});
+
+
 // Start the server and listen on the specified port
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`); // Log a message indicating the server is running

@@ -2,13 +2,23 @@
 import { useEffect } from "react";
 // Import the Link component from React Router for navigation between pages
 import { Link } from "react-router-dom";
-
 // Import the Card component from React Bootstrap to display movie details in a styled card
 import Card from 'react-bootstrap/Card';
+import axios from "axios";
+import Button from 'react-bootstrap/Button';
 
 // Define the MovieItem component, which receives props as its parameter
-const MovieItem = (props) => {
-  
+function MovieItem (props) {
+  const handleDelete = (e) => {
+        e.preventDefault();
+        axios.delete('http://localhost:4000/api/movie/' + props.mymovie._id)
+        .then(() => {
+          props.Reload(); // Refresh the movie list after deletion
+      })
+      .catch((error) => {
+          console.error("Error deleting movie:", error);
+      });
+};
   // useEffect hook to log the movie details each time the 'mymovie' prop changes
   useEffect(() => {
     console.log("Movie Item:", props.mymovie);  // Log the current movie object to the console
@@ -32,6 +42,7 @@ const MovieItem = (props) => {
         {/* Link to the "Edit" page for the current movie using the movie's _id */}
         {/* This will allow the user to navigate to the page where they can update the movie details */}
         <Link className="btn btn-primary" to={"/edit/" + props.mymovie._id}>Update</Link>
+        <Button variant="danger" onClick={handleDelete}>Delete</Button> {/*added a delete button with onclick function of handleDelete*/}
       </Card>
     </div>
   );
